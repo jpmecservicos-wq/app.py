@@ -184,7 +184,7 @@ with aba_orcamento:
                         reg["Peças (R$)"] = v_pecas
                         reg["Total Geral (R$)"] = v_mao_de_obra + v_pecas
                         reg["Status"] = novo_status
-                        st.success(f"OS {os_selecionada} atualizada!")
+                        st.success(f"OS {os_selecionada} updated!")
                         st.rerun()
     else:
         st.info("Nenhum equipamento cadastrado no pátio para gerar laudos.")
