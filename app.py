@@ -187,11 +187,6 @@ with aba_orcamento:
                             "Aguardando Diagnóstico", 
                             "Orçamento em Análise pelo Cliente", 
                             "Aprovado - Em Manutenção", 
-                        with col_orc2:
-                        opcoes_status = [
-                            "Aguardando Diagnóstico", 
-                            "Orçamento em Análise pelo Cliente", 
-                            "Aprovado - Em Manutenção", 
                             "Pronto para Retirada", 
                             "Entregue / Concluído", 
                             "Recusado / Sem Conserto"
@@ -203,7 +198,3 @@ with aba_orcamento:
                             idx_atual = 0
                             
                         novo_status = st.selectbox(
-                            "Situação Atual do Equipamento",
-                            options=opcoes_status,
-                            index=idx_atual
-                        )
