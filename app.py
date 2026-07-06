@@ -18,7 +18,6 @@ if "dados_oficina" not in st.session_state:
     st.session_state.dados_oficina = []
 
 if "cadastro_empresas" not in st.session_state:
-    # Exemplo inicial de empresa cadastrada para teste
     st.session_state.cadastro_empresas = [
         {"Empresa": "Cliente Particular / Sem CNPJ", "CNPJ": "00.000.000/0000-00", "Contato": "N/A"}
     ]
@@ -183,18 +182,18 @@ with aba_orcamento:
                         v_pecas = st.number_input("Peças e Insumos Aplicados (R$)", min_value=0.0, value=float(reg["Peças (R$)"]), format="%.2f")
                     
                     with col_orc2:
-                        opcoes_status = [
-                            "Aguardando Diagnóstico", 
-                            "Orçamento em Análise pelo Cliente", 
-                            "Aprovado - Em Manutenção", 
-                            "Pronto para Retirada", 
-                            "Entregue / Concluído", 
-                            "Recusado / Sem Conserto"
-                        ]
-                        
-                        if reg["Status"] in opcoes_status:
-                            idx_atual = opcoes_status.index(reg["Status"])
-                        else:
-                            idx_atual = 0
-                            
                         novo_status = st.selectbox(
+                            "Situação Atual do Equipamento",
+                            options=[
+                                "Aguardando Diagnóstico", 
+                                "Orçamento em Análise pelo Cliente", 
+                                "Aprovado - Em Manutenção", 
+                                "Pronto para Retirada", 
+                                "Entregue / Concluído", 
+                                "Recusado / Sem Conserto"
+                            ]
+                        )
+                    
+                    atualizar_dados = st.form_submit_button("Salvar Alterações 💾")
+                    
+                    if atualizar_dados:
