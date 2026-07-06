@@ -8,8 +8,8 @@ st.set_page_config(page_title="J&P MEC - Gestão de Equipamentos", page_icon="�
 # -----------------------------------------------------------------------------
 # EXIBIÇÃO DO LOGO OFICIAL EDITADO E DADOS DA EMPRESA
 # -----------------------------------------------------------------------------
+# Link definitivo da imagem oficial da J&P MEC
 logo_url = "https://githubusercontent.com"
-
 st.image(logo_url, width=320)
 
 st.markdown("---")
