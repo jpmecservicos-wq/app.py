@@ -55,7 +55,7 @@ with aba_clientes:
                 "Contato": contato_empresa if contato_empresa else "Não informado"
             }
             st.session_state.cadastro_empresas.append(nova_empresa)
-            st.success(f"✔️ Empresa **{nome_empresa}** cadastrada com sucesso! Ela já está disponível na aba de Entrada.")
+            st.success(f"✔️ Empresa **{nome_empresa}** cadastrada com sucesso!")
         else:
             st.error("❌ Erro: O nome da empresa é obrigatório.")
             
@@ -82,14 +82,14 @@ with aba_entrada:
                 "Categoria", 
                 ["Compressor a Diesel", "Gerador de Energia", "Caminhão / Linha Pesada", "Veículo Leve", "Outro"]
             )
-            modelo = st.text_input("Modelo / Marca (Ex: Atlas Copco XA 125 / Doosan 7/41)")
+            modelo = st.text_input("Modelo / Marca")
             ano_fabricacao = st.text_input("Ano de Fabricação")
-            serial_chassi = st.text_input("Número de Série / Placa (Chave de Rastreabilidade)")
+            serial_chassi = st.text_input("Número de Série / Placa")
             
         with col2:
             st.subheader("📊 Condições Operacionais de Entrada")
-            horimetro = st.number_input("Horímetro Atual (Horas de Uso - Crítico)", min_value=0, step=1)
-            kilometragem = st.number_input("Quilometragem (Se aplicável)", min_value=0, step=1)
+            horimetro = st.number_input("Horímetro Atual", min_value=0, step=1)
+            kilometragem = st.number_input("Quilometragem", min_value=0, step=1)
             
             status_partida = st.selectbox(
                 "Condição Mecânica de Entrada",
@@ -107,7 +107,7 @@ with aba_entrada:
             insp_painel = st.selectbox("Painel Elétrico / Controladores", ["Perfeito estado", "Visor quebrado/Digital ilegível", "Sem botões / Chave de partida danificada"])
             
         with col_insp2:
-            insp_faltantes = st.text_input("Acessórios ou Itens Faltantes (Ex: Sem Bateria, Sem Engate)", value="Nenhum")
+            insp_faltantes = st.text_input("Acessórios ou Itens Faltantes", value="Nenhum")
             insp_rodado = st.selectbox("Eixo / Pneus / Sistema de Reboque", ["Bom estado", "Pneus danificados", "Sem rodas (Fixo sobre base)", "Não se aplica"])
             obs_inspecao = st.text_area("Observações Técnicas Visuais Complementares")
 
@@ -151,11 +151,10 @@ with aba_entrada:
                 "Total Geral (R$)": 0.0,
                 "Status": "Aguardando Diagnóstico"
             }
-            
             st.session_state.dados_oficina.append(novo_registro)
-            st.success(f"✔️ Equipamento registrado! **OS J&P MEC #{numero_os}** vinculada à empresa **{empresa_selecionada}**.")
+            st.success(f"✔️ Equipamento registrado! OS #{numero_os}")
         else:
-            st.error("❌ Atenção: Modelo e Número de Série são campos obrigatórios para garantir o rastreio.")
+            st.error("❌ Atenção: Modelo e Número de Série são obrigatórios.")
 
 # -----------------------------------------------------------------------------
 # ABA 3: LAUDO TÉCNICO E COMPOSIÇÃO DE ORÇAMENTO
@@ -169,31 +168,37 @@ with aba_orcamento:
         
         for reg in st.session_state.dados_oficina:
             if reg["OS"] == os_selecionada:
-                st.markdown(f"⚙️ **Equipamento:** {reg['Equipamento']} {reg['Modelo']} | **Série:** {reg['Nº Série']} | **Cliente:** {reg['Cliente']}")
+                st.markdown(f"⚙️ **Equipamento:** {reg['Equipamento']} {reg['Modelo']} | **Cliente:** {reg['Cliente']}")
                 
                 with st.form("form_valores_jpmec"):
-                    st.subheader("🔬 Diagnóstico do Especialista")
-                    laudo = st.text_area("Laudo Técnico Real (Defeitos encontrados após desmontagem/testes)", value=reg["Laudo Técnico"])
-                    
-                    st.subheader("💸 Orçamento Comercial")
-                    col_orc1, col_orc2 = st.columns(2)
-                    with col_orc1:
-                        v_mao_de_obra = st.number_input("Mão de Obra Técnica (R$)", min_value=0.0, value=float(reg["Mão de Obra (R$)"]), format="%.2f")
-                        v_pecas = st.number_input("Peças e Insumos Aplicados (R$)", min_value=0.0, value=float(reg["Peças (R$)"]), format="%.2f")
-                    
-                    with col_orc2:
-                        novo_status = st.selectbox(
-                            "Situação Atual do Equipamento",
-                            options=[
-                                "Aguardando Diagnóstico", 
-                                "Orçamento em Análise pelo Cliente", 
-                                "Aprovado - Em Manutenção", 
-                                "Pronto para Retirada", 
-                                "Entregue / Concluído", 
-                                "Recusado / Sem Conserto"
-                            ]
-                        )
+                    laudo = st.text_area("Laudo Técnico Real", value=reg["Laudo Técnico"])
+                    v_mao_de_obra = st.number_input("Mão de Obra Técnica (R$)", min_value=0.0, value=float(reg["Mão de Obra (R$)"]), format="%.2f")
+                    v_pecas = st.number_input("Peças e Insumos Aplicados (R$)", min_value=0.0, value=float(reg["Peças (R$)"]), format="%.2f")
+                    novo_status = st.selectbox("Situação Atual do Equipamento", ["Aguardando Diagnóstico", "Orçamento em Análise", "Aprovado - Em Manutenção", "Pronto para Retirada", "Entregue", "Recusado"])
                     
                     atualizar_dados = st.form_submit_button("Salvar Alterações 💾")
                     
                     if atualizar_dados:
+                        reg["Laudo Técnico"] = laudo
+                        reg["Mão de Obra (R$)"] = v_mao_de_obra
+                        reg["Peças (R$)"] = v_pecas
+                        reg["Total Geral (R$)"] = v_mao_de_obra + v_pecas
+                        reg["Status"] = novo_status
+                        st.success(f"OS {os_selecionada} atualizada!")
+                        st.rerun()
+    else:
+        st.info("Nenhum equipamento cadastrado no pátio para gerar laudos.")
+
+# -----------------------------------------------------------------------------
+# ABA 4: PAINEL DE CONTROLE DE PÁTIO (MONITORAMENTO)
+# -----------------------------------------------------------------------------
+with aba_painel:
+    st.header("🔍 Controle Geral do Pátio J&P MEC")
+    
+    if st.session_state.dados_oficina:
+        df = pd.DataFrame(st.session_state.dados_oficina)
+        
+        col_f1, col_f2 = st.columns(2)
+        with col_f1:
+            busca_cliente = st.text_input("Filtrar por nome de Empresa/Cliente")
+        with col_f2:
