@@ -6,11 +6,11 @@ from datetime import datetime
 st.set_page_config(page_title="J&P MEC - Gestão de Equipamentos", page_icon="⚙️", layout="wide")
 
 # -----------------------------------------------------------------------------
-# EXIBIÇÃO DO LOGO OFICIAL EDITADO E DADOS DA EMPRESA
+# EXIBIÇÃO DO LOGO OFICIAL DA J&P MEC
 # -----------------------------------------------------------------------------
-# Link definitivo da imagem oficial da J&P MEC
+# Link direto e seguro da imagem do logo salva no seu próprio repositório
 logo_url = "https://githubusercontent.com"
-st.image(logo_url, width=320)
+st.image(logo_url, width=350)
 
 st.markdown("---")
 
@@ -197,4 +197,3 @@ with aba_orcamento:
                             idx_atual = opcoes_status.index(reg["Status"])
                         else:
                             idx_atual = 0
-                            
